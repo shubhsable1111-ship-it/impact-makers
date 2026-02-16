@@ -116,21 +116,21 @@ def generate_recommendations(
     recommendations = []
 
     if risk_category == "High Risk":
-        recommendations.append("🎯 Priority: Focus on building financial stability and digital payment history")
+        recommendations.append("Priority: Focus on building financial stability and digital payment history")
 
     if income_variance >= 0.3:
-        recommendations.append("📊 Try to stabilize your income sources or maintain emergency savings")
+        recommendations.append("Try to stabilize your income sources or maintain emergency savings")
 
     if upi_txn_count <= 30:
-        recommendations.append("💳 Increase digital payment usage through UPI for daily transactions")
+        recommendations.append("Increase digital payment usage through UPI for daily transactions")
 
     if bill_payment_score <= 7:
-        recommendations.append("📅 Set up automatic bill payments to improve payment consistency")
+        recommendations.append("Set up automatic bill payments to improve payment consistency")
 
     if withdrawal_ratio > 0.7:
-        recommendations.append("🏦 Reduce cash withdrawals and use digital payments more frequently")
+        recommendations.append("Reduce cash withdrawals and use digital payments more frequently")
 
     if score < 70:
-        recommendations.append("⏰ Continue working in your current role to build a stronger work history")
+        recommendations.append("Continue working in your current role to build a stronger work history")
 
     return recommendations

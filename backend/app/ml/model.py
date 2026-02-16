@@ -83,7 +83,7 @@ class CreditRiskMLModel:
         self.model.fit(X_scaled, y)
         self.is_trained = True
         
-        print(f"✅ {self.model_type} model trained successfully")
+        print(f"{self.model_type} model trained successfully")
     
     def predict_risk(
         self,
@@ -167,7 +167,7 @@ class CreditRiskMLModel:
         with open(filepath, 'wb') as f:
             pickle.dump(model_data, f)
         
-        print(f"✅ Model saved to {filepath}")
+        print(f"Model saved to {filepath}")
     
     def load_model(self, filepath: str):
         """Load trained model from disk"""
@@ -182,7 +182,7 @@ class CreditRiskMLModel:
         self.model_type = model_data["model_type"]
         self.is_trained = True
         
-        print(f"✅ Model loaded from {filepath}")
+        print(f"Model loaded from {filepath}")
 
 
 # Example usage (for future implementation)
