@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>LoneGuard - Register</title>
+  <link rel="stylesheet" href="css/style1.css">
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- Left Branding Section -->
+    <div class="left-panel">
+      <h2>LoneGuard AI</h2>
+      <h1>Assess risk with total confidence.</h1>
+      <p>Secure • Encrypted • AI-Driven</p>
+      <p class="small-text">
+        Our AI-powered credit intelligence platform evaluates alternative financial data
+        to deliver fair, transparent and ethical credit scoring.
+      </p>
+    </div>
+
+    <!-- Right Form Section -->
+    <div class="right-panel">
+      <div class="form-card">
+        <h2>Create Account</h2>
+        <p>Please enter your details to register.</p>
+
+        <!-- Form Start -->
+        <form id="registerForm">
+
+          <input id="name" type="text" placeholder="Full Name" required>
+          <input id="email" type="email" placeholder="Email Address" required>
+          <input id="job" type="text" placeholder="Job Type" required>
+          <input id="months" type="number" placeholder="Months Active" required>
+
+          <button type="submit">Create Account</button>
+
+        </form>
+        <!-- Form End -->
+
+        <p class="bottom-text">
+          Already have an account? <a href="index.html">Sign In</a>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+
+  <script src="js/api.js"></script>
+  <script src="js/register.js"></script>
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", async function (e) {
+      e.preventDefault(); // prevent page reload
+
+      const submitButton = this.querySelector('button[type="submit"]');
+      const originalText = submitButton.textContent;
+
+      try {
+        // Disable button during submission
+        submitButton.disabled = true;
+        submitButton.textContent = 'Creating Account...';
+
+        // Call the registration function from register.js
+        await registerUser();
+
+        // Success - registerUser handles redirect
+      } catch (error) {
+        // Re-enable button on error
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+
+        // Show error message
+        alert("Registration failed: " + (error.message || "Please try again"));
+        console.error("Registration error:", error);
+      }
+    });
+  </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Health Dashboard · Loan Decision</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #d9e9ff, #b6d4ff);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* main dashboard card – blue theme with glass */
+        .dashboard {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 3rem;
+            box-shadow: 0 30px 60px -20px #0b2f5e, 0 10px 25px -10px #002856;
+            border: 1px solid rgba(52, 116, 255, 0.25);
+            overflow: hidden;
+            padding: 2.2rem 2.5rem;
+        }
+
+        /* top row – kpi cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.5rem 1.2rem;
+            box-shadow: 0 12px 28px -12px #2b69b0;
+            border-left: 8px solid #1e6df2;
+            transition: 0.2s;
+            border: 1px solid rgba(0, 80, 255, 0.15);
+        }
+
+        .kpi-card.blue-accent {
+            border-left-color: #1e4fd0;
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            color: #3969b5;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kpi-value {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #032b63;
+            line-height: 1.2;
+        }
+
+        .kpi-trend {
+            font-size: 0.9rem;
+            margin-top: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .trend-up { color: #2a7f3b; }
+        .trend-down { color: #c72a2a; }
+        .trend-neutral { color: #e68a2e; }
+
+        /* second row – financial health + credit risk */
+        .health-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .health-card {
+            flex: 2;
+            min-width: 260px;
+            background: white;
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 16px 30px -12px #3366cc40;
+            border: 1px solid #9bc0ff;
+        }
+
+        .credit-card {
+            flex: 1;
+            min-width: 240px;
+            background: white;
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 16px 30px -12px #3366cc40;
+            border: 1px solid #9bc0ff;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #103e7c;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .health-metric {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px dashed #a0c0f0;
+            padding: 0.8rem 0;
+        }
+
+        .health-metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: #1d4985;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-weight: 700;
+            color: #06357a;
+            background: #e2edff;
+            padding: 0.2rem 1rem;
+            border-radius: 60px;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            background: #d5ffd0;
+            color: #1e6b2c;
+            font-weight: 700;
+            padding: 0.5rem 1.8rem;
+            border-radius: 60px;
+            margin: 0.5rem 0 1rem 0;
+        }
+
+        .trustscore {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #003c9e;
+        }
+
+        .trustscore small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #3f6bb5;
+        }
+
+        /* spending analysis */
+        .spending-section {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem 2rem;
+            box-shadow: 0 16px 30px -12px #3366cc40;
+            border: 1px solid #9bc0ff;
+            margin-top: 1rem;
+        }
+
+        .spending-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .spending-header h3 {
+            font-size: 1.5rem;
+            color: #0a3e82;
+        }
+
+        .category-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem 2rem;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.2rem;
+            border-bottom: 1px solid #e7f0ff;
+        }
+
+        .cat-name {
+            font-weight: 600;
+            color: #1a4c9e;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cat-amount {
+            font-weight: 700;
+            color: #052d60;
+            margin-right: 0.5rem;
+        }
+
+        .cat-percent {
+            background: #d9e9ff;
+            padding: 0.2rem 1rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #003f9c;
+        }
+
+        .insight-note {
+            margin-top: 2rem;
+            background: #d1e3ff;
+            padding: 1.2rem 2rem;
+            border-radius: 60px;
+            color: #003d80;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #3570d6;
+        }
+
+        .insight-note i {
+            color: #1f6ed6;
+            font-size: 1.4rem;
+        }
+
+        hr {
+            border: 1px solid #abc4f0;
+            margin: 1.5rem 0;
+        }
+
+        /* ----- LOAN DECISION BUTTONS (for worker) ----- */
+        .loan-decision-section {
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            background: white;
+            border-radius: 3rem;
+            padding: 1.2rem 2rem;
+            border: 1px solid #3d7eff;
+            box-shadow: 0 8px 18px -8px #1650b0;
+        }
+
+        .loan-question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #043477;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .loan-question i {
+            color: #f0b300;
+            font-size: 1.8rem;
+        }
+
+        .loan-buttons {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .loan-btn {
+            border: none;
+            padding: 0.9rem 2.8rem;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 20px -12px #103470;
+        }
+
+        .yes-btn {
+            background: #0740a5;
+            color: white;
+            border: 1px solid #90b4ff;
+        }
+
+        .yes-btn:hover {
+            background: #0c4fd6;
+            transform: scale(1.02);
+        }
+
+        .no-btn {
+            background: #ffffff;
+            color: #043477;
+            border: 2px solid #0740a5;
+        }
+
+        .no-btn:hover {
+            background: #e1edff;
+            transform: scale(1.02);
+        }
+
+        .decision-message {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #0450b5;
+            background: #deecff;
+            padding: 0.7rem 2rem;
+            border-radius: 60px;
+            display: inline-block;
+            border: 1px dashed #2f6ed4;
+            transition: 0.2s;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Success page button (embedded) */
+        .view-success-btn {
+            background: #0740a5;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 1rem;
+            border: 1px solid #90b4ff;
+            transition: 0.2s;
+        }
+
+        .view-success-btn:hover {
+            background: #0c4fd6;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- top KPI row : total income, expense, net profit, savings ratio -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label"><i class="fas fa-circle-dollar" style="color:#0f6dec;"></i> TOTAL INCOME</div>
+                <div class="kpi-value">24,850</div>
+                <div class="kpi-trend trend-up"><i class="fas fa-arrow-up"></i> 12.4% vs last month</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label"><i class="fas fa-cart-shopping" style="color:#0f6dec;"></i> TOTAL EXPENSE</div>
+                <div class="kpi-value">18,420</div>
+                <div class="kpi-trend trend-down"><i class="fas fa-arrow-down"></i> 3.2% vs last month</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label"><i class="fas fa-chart-line" style="color:#0f6dec;"></i> NET PROFIT</div>
+                <div class="kpi-value">6,430</div>
+                <div class="kpi-trend trend-up"><i class="fas fa-arrow-up"></i> 8.7% margin</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label"><i class="fas fa-piggy-bank" style="color:#0f6dec;"></i> SAVINGS RATIO</div>
+                <div class="kpi-value">25.8%</div>
+                <div class="kpi-trend trend-neutral"><i class="fas fa-minus"></i> Above average</div>
+            </div>
+        </div>
+
+        <!-- Financial health & credit risk row -->
+        <div class="health-row">
+            <div class="health-card">
+                <div class="section-title"><i class="fas fa-heart-pulse" style="color:#1e6df2;"></i> Financial Health</div>
+                <div class="health-metric">
+                    <span class="metric-label">Status</span>
+                    <span class="metric-value">Excellent</span>
+                </div>
+                <div class="health-metric">
+                    <span class="metric-label">Income-to-expense ratio</span>
+                    <span class="metric-value">Strong</span>
+                </div>
+                <div class="health-metric">
+                    <span class="metric-label">TrustScore</span>
+                    <span class="metric-value">785 / 900 · Top 15%</span>
+                </div>
+            </div>
+            <div class="credit-card">
+                <div class="section-title"><i class="fas fa-shield" style="color:#1e6df2;"></i> Credit Risk Level</div>
+                <div><span class="risk-badge"><i class="fas fa-check-circle"></i> Low Risk</span></div>
+                <div class="health-metric">
+                    <span class="metric-label">Assessment</span>
+                    <span class="metric-value">Stable</span>
+                </div>
+                <div style="margin-top: 1rem; background:#e7f1ff; border-radius:30px; padding:0.8rem 1rem; text-align:center;">
+                    <span style="font-weight:600;">TrustScore: 785/900 · Top 15%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spending Pattern Analysis -->
+        <div class="spending-section">
+            <div class="spending-header">
+                <i class="fas fa-chart-pie" style="font-size: 2rem; color:#2266dd;"></i>
+                <h3>Spending Pattern Analysis</h3>
+            </div>
+
+            <div class="category-list">
+                <div class="category-item">
+                    <span class="cat-name"><i class="fas fa-home" style="color:#2266dd;"></i> Housing</span>
+                    <span><span class="cat-amount">4,500</span> <span class="cat-percent">24.4%</span></span>
+                </div>
+                <div class="category-item">
+                    <span class="cat-name"><i class="fas fa-utensils" style="color:#2266dd;"></i> Food & Dining</span>
+                    <span><span class="cat-amount">2,850</span> <span class="cat-percent">15.5%</span></span>
+                </div>
+                <div class="category-item">
+                    <span class="cat-name"><i class="fas fa-car" style="color:#2266dd;"></i> Transportation</span>
+                    <span><span class="cat-amount">1,200</span> <span class="cat-percent">6.5%</span></span>
+                </div>
+                <div class="category-item">
+                    <span class="cat-name"><i class="fas fa-film" style="color:#2266dd;"></i> Entertainment</span>
+                    <span><span class="cat-amount">950</span> <span class="cat-percent">5.2%</span></span>
+                </div>
+                <div class="category-item">
+                    <span class="cat-name"><i class="fas fa-hospital" style="color:#2266dd;"></i> Healthcare</span>
+                    <span><span class="cat-amount">780</span> <span class="cat-percent">4.2%</span></span>
+                </div>
+                <div class="category-item">
+                    <span class="cat-name"><i class="fas fa-ellipsis-h" style="color:#2266dd;"></i> Other</span>
+                    <span><span class="cat-amount">8,140</span> <span class="cat-percent">44.2%</span></span>
+                </div>
+            </div>
+
+            <div class="insight-note">
+                <i class="fas fa-lightbulb"></i>
+                <span>Healthy spending pattern with good savings discipline. Entertainment below threshold.</span>
+            </div>
+
+            <div style="display: flex; gap: 2rem; margin-top: 1rem; font-size:0.9rem; color:#2e67b3; flex-wrap:wrap;">
+                <span><i class="fas fa-arrow-up trend-up"></i> 12.4% vs last month (income)</span>
+                <span><i class="fas fa-arrow-down trend-down"></i> 3.2% vs last month (expense)</span>
+                <span><i class="fas fa-arrow-up trend-up"></i> 8.7% margin</span>
+                <span><i class="fas fa-chart-simple"></i> Above average savings ratio</span>
+            </div>
+        </div>
+
+        <!-- LOAN DECISION SECTION (for worker) -->
+        <div class="loan-decision-section">
+            <div class="loan-question">
+                <i class="fas fa-hand-holding-dollar"></i> Can we give a loan to the worker?
+            </div>
+            <div class="loan-buttons">
+                <button class="loan-btn yes-btn" id="yesLoanWorker"><i class="fas fa-check-circle"></i> Yes</button>
+                <button class="loan-btn no-btn" id="noLoanWorker"><i class="fas fa-times-circle"></i> No</button>
+            </div>
+        </div>
+        <div id="loanDecisionMessage" class="decision-message">
+            <!-- dynamic decision message appears here -->
+        </div>
+    </div>
+
+    <!-- Hidden success page content (will be shown in a modal style) -->
+    <div id="successPage" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000;">
+        <div style="background: white; max-width: 500px; width: 90%; border-radius: 3rem; padding: 2.5rem; text-align: center; box-shadow: 0 30px 60px -20px #0b2f5e; border: 1px solid #3d7eff;">
+            <div style="font-size: 5rem; color: #1e6df2; background: #e0edff; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1 style="font-size: 2.5rem; color: #043477; margin-bottom: 0.5rem;">Loan Provided!</h1>
+            <div style="background: #d1e3ff; color: #043477; padding: 0.5rem 2rem; border-radius: 60px; display: inline-block; margin-bottom: 2rem;">Successfully Disbursed</div>
+            
+            <div style="background: #f0f7ff; border-radius: 2rem; padding: 1.5rem; margin: 1.5rem 0;">
+                <div style="font-size: 2.2rem; font-weight: 800; color: #0740a5; margin-bottom: 1rem;">₹50,000</div>
+                <div style="display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px dashed #a0c0f0;">
+                    <span style="font-weight: 600; color: #1d4985;">Borrower</span>
+                    <span style="font-weight: 700; color: #043477; background: #e2edff; padding: 0.2rem 1rem; border-radius: 60px;">Rahul Sharma</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px dashed #a0c0f0;">
+                    <span style="font-weight: 600; color: #1d4985;">Loan ID</span>
+                    <span style="font-weight: 700; color: #043477; background: #e2edff; padding: 0.2rem 1rem; border-radius: 60px;">LN2026-02-1601</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.8rem 0;">
+                    <span style="font-weight: 600; color: #1d4985;">Date</span>
+                    <span style="font-weight: 700; color: #043477; background: #e2edff; padding: 0.2rem 1rem; border-radius: 60px;">16 Feb 2026</span>
+                </div>
+            </div>
+            
+            <div style="margin: 1.5rem 0; color: #2e67b3;">The loan has been successfully credited to the borrower's account</div>
+            
+            <button onclick="closeSuccessPage()" style="background: #0740a5; color: white; border: none; padding: 1rem 2.5rem; border-radius: 60px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem;">
+                <i class="fas fa-home"></i> Back to Dashboard
+            </button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const yesBtn = document.getElementById('yesLoanWorker');
+            const noBtn = document.getElementById('noLoanWorker');
+            const messageDiv = document.getElementById('loanDecisionMessage');
+            const successPage = document.getElementById('successPage');
+
+            function setMessage(text, isApproved) {
+                messageDiv.textContent = text;
+                messageDiv.style.background = isApproved ? '#d4f0d4' : '#ffe0cc';
+                messageDiv.style.color = isApproved ? '#0a520a' : '#a04500';
+                messageDiv.style.border = isApproved ? '1px solid #1f8b1f' : '1px solid #c96200';
+            }
+
+            // Function to show success page
+            window.showSuccessPage = function() {
+                successPage.style.display = 'flex';
+                // Also update the message div
+                setMessage('✅ Loan approved: Your loan has been successfully processed and provided to the worker.', true);
+            };
+
+            // Function to close success page
+            window.closeSuccessPage = function() {
+                successPage.style.display = 'none';
+            };
+
+            yesBtn.addEventListener('click', function() {
+                // Show the success page
+                showSuccessPage();
+            });
+
+            noBtn.addEventListener('click', function() {
+                // Show denial message only (no success page)
+                setMessage('❌ Loan request denied: The worker does not meet the loan criteria at this time.', false);
+                
+                // If success page is open, close it (just in case)
+                if (successPage.style.display === 'flex') {
+                    successPage.style.display = 'none';
+                }
+            });
+
+            // Close success page if clicking outside (optional)
+            window.addEventListener('click', function(e) {
+                if (e.target === successPage) {
+                    closeSuccessPage();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

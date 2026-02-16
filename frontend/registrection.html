@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoneGuard · Bank Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .split-container {
+            display: flex;
+            width: 100%;
+            max-width: 1300px;
+            height: 700px;
+            background: white;
+            border-radius: 48px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Left Side - Blue Gradient */
+        .left-side {
+            flex: 1;
+            background: linear-gradient(145deg, #2b5ed7 0%, #1e3caa 100%);
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Abstract pattern overlay */
+        .left-side::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .left-side::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            bottom: -100px;
+            right: -100px;
+            border-radius: 50%;
+        }
+
+        .logo-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-badge span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: rgba(255,255,255,0.15);
+            padding: 10px 20px;
+            border-radius: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 450px;
+        }
+
+        .left-side h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 25px;
+            letter-spacing: -0.02em;
+        }
+
+        .left-side h1 span {
+            display: block;
+            font-size: 2rem;
+            opacity: 0.9;
+            font-weight: 400;
+            margin-top: 10px;
+        }
+
+        .left-side p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.85;
+            margin-bottom: 40px;
+            max-width: 400px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 40px;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .feature-list li span {
+            background: rgba(255,255,255,0.15);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Right Side - White Card */
+        .right-side {
+            flex: 1;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 40px;
+            padding: 50px 45px;
+            width: 100%;
+            max-width: 460px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255,255,255,0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .form-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-header {
+            margin-bottom: 35px;
+        }
+
+        .form-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a2639;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-header p {
+            color: #6b7a99;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2d3a5e;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 1rem;
+            border: 2px solid #eef2f6;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #2b5ed7;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(43, 94, 215, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: #a3b3cc;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .helper-text {
+            font-size: 0.8rem;
+            color: #8f9eb5;
+            margin-top: 6px;
+            margin-left: 5px;
+        }
+
+        .create-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #2b5ed7, #1e3caa);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 10px 20px rgba(30, 60, 170, 0.2);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .create-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(30, 60, 170, 0.3);
+        }
+
+        .create-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 25px;
+            color: #8f9eb5;
+            font-size: 0.85rem;
+            border-top: 1px solid #eef2f6;
+            padding-top: 20px;
+        }
+
+        .security-note span {
+            background: #f0f4fa;
+            padding: 5px 10px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .split-container {
+                flex-direction: column;
+                height: auto;
+                border-radius: 36px;
+            }
+
+            .left-side {
+                padding: 50px 40px;
+                text-align: center;
+                align-items: center;
+            }
+
+            .left-side h1 {
+                font-size: 2.8rem;
+            }
+
+            .content-wrapper {
+                max-width: 500px;
+            }
+
+            .feature-list {
+                text-align: left;
+            }
+
+            .right-side {
+                padding: 40px 20px;
+            }
+
+            .form-card {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .left-side h1 {
+                font-size: 2.2rem;
+            }
+
+            .form-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .input-field {
+                padding: 14px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="split-container">
+        <!-- Left side - Blue gradient with content -->
+        <div class="left-side">
+            <div class="logo-badge">
+                <span>🏦 LoneGuard</span>
+            </div>
+            
+            <div class="content-wrapper">
+                <h1>
+                    Bank Registration
+                    <span>Verified in minutes</span>
+                </h1>
+                
+                <p>
+                    Connect your bank branch securely to start your ethical credit journey with AI-powered insights.
+                </p>
+
+                <ul class="feature-list">
+                    <li>
+                        <span>✓</span>
+                        Instant IFSC verification
+                    </li>
+                    <li>
+                        <span>✓</span>
+                        Secure branch linking
+                    </li>
+                    <li>
+                        <span>✓</span>
+                        RBI compliant process
+                    </li>
+                    <li>
+                        <span>✓</span>
+                        End-to-end encryption
+                    </li>
+                </ul>
+
+                <div style="margin-top: 50px; opacity: 0.7; font-size: 0.9rem; display: flex; gap: 20px;">
+                    <span>🏛️ 2000+ banks</span>
+                    <span>🔒 256-bit SSL</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right side - White form card -->
+        <div class="right-side">
+            <div class="form-card">
+                <div class="form-header">
+                    <h2>Branch Details</h2>
+                    <p>Enter your bank branch information to continue</p>
+                </div>
+
+                <form id="registrationForm">
+                    <!-- IFSC Code Field -->
+                    <div class="input-group">
+                        <label class="input-label" for="ifsc">IFSC Code</label>
+                        <input 
+                            type="text" 
+                            id="ifsc" 
+                            class="input-field" 
+                            placeholder="e.g., SBIN0001234" 
+                            pattern="^[A-Z]{4}0[A-Z0-9]{6}$"
+                            title="11 characters: First 4 letters, then 0, then 6 alphanumeric"
+                            required
+                        >
+                        <div class="helper-text">11 characters · First 4 letters, then 0, then 6 alphanumeric</div>
+                    </div>
+
+                    <!-- Branch Name Field -->
+                    <div class="input-group">
+                        <label class="input-label" for="branch">Branch Name</label>
+                        <input 
+                            type="text" 
+                            id="branch" 
+                            class="input-field" 
+                            placeholder="e.g., Connaught Place, New Delhi" 
+                            required
+                        >
+                        <div class="helper-text">Full branch name as per bank records</div>
+                    </div>
+
+                    <!-- Create Account Button -->
+                    <button type="button" class="create-btn" onclick="openScorePage()">
+                        <span>✨</span>
+                        Connect Branch Securely
+                        <span>→</span>
+                    </button>
+
+                    <div class="security-note">
+                        <span>🔐</span>
+                        256-bit encrypted
+                        <span>⚡</span>
+                        Instant verification
+                    </div>
+                </form>
+
+                <!-- Demo hint (subtle) -->
+                <div style="text-align: center; margin-top: 15px; font-size: 0.8rem; color: #b3c0d6;">
+                    Demo: any IFSC format accepted
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Add real-time IFSC formatting hint
+        document.getElementById('ifsc').addEventListener('input', function(e) {
+            let value = e.target.value.toUpperCase();
+            e.target.value = value;
+            
+            // Simple visual feedback (not strict validation)
+            const helper = document.querySelector('.input-group:first-child .helper-text');
+            if (value.length === 11) {
+                helper.style.color = '#2b5ed7';
+                helper.style.fontWeight = '500';
+            } else {
+                helper.style.color = '#8f9eb5';
+                helper.style.fontWeight = '400';
+            }
+        });
+
+        // Function to open score.html
+        function openScorePage() {
+            const ifsc = document.getElementById('ifsc').value.trim();
+            const branch = document.getElementById('branch').value.trim();
+            
+            // Simple validation
+            if (!ifsc || !branch) {
+                alert('Please fill in both IFSC Code and Branch Name fields');
+                return;
+            }
+            
+            // Store data in localStorage to pass to next page
+            localStorage.setItem('ifscCode', ifsc);
+            localStorage.setItem('branchName', branch);
+            
+            // Show success message
+            alert('✅ Branch connected successfully! Redirecting to your credit score...');
+            
+            // Open score.html in the same tab
+            window.location.href = 'score.html';
+        }
+    </script>
+</body>
+</html>
